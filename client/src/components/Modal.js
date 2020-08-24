@@ -22,7 +22,8 @@ export const Modal = ({ isShowing, hide }) =>
             tabIndex={-1}
             role="dialog"
           >
-            <div className="modal-header">
+            <h2 className="modal-header">Settings</h2>
+            {/* <div className="modal-header">
               <button
                 type="button"
                 className="modal-close-button"
@@ -32,8 +33,14 @@ export const Modal = ({ isShowing, hide }) =>
               >
                 <span aria-hidden="true">&times;</span>
               </button>
+            </div> */}
+            <div className="modal-content">
+              <p>Hello, I'm a modal.</p>
             </div>
-            <p>Hello, I'm a modal.</p>
+            <div className="modal-footer">
+              <button>Cancel</button>
+              <button className="save-btn">Save</button>
+            </div>
           </div>
           {/* </div> */}
         </React.Fragment>,

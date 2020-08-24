@@ -295,25 +295,51 @@ button {
 
 .modal {
   z-index: 1050;
-  background: white;
+  background: #313235;
+  color: white;
   position: relative;
   margin: 1.75rem auto;
-  border-radius: 3px;
+  border-radius: 8px;
   max-width: 500px;
   padding: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.6), 0 4px 8px 3px rgba(0, 0, 0, 0.302);
+  border-color: #e8eaed;
 }
 
 .modal-header {
-  display: flex;
-  justify-content: flex-end;
+  text-align: center;
 }
 
-.modal-close-button {
-  font-size: 1.4rem;
-  font-weight: 700;
-  line-height: 1;
-  color: #000;
-  opacity: 0.3;
-  cursor: pointer;
-  border: none;
+.modal-content {
+  margin-top: 1rem;
 }
+
+.modal-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  button {
+    padding: 8px 24px;
+    background: inherit;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(154, 160, 166, 0.161);
+    }
+  }
+}
+.save-btn {
+  color: #8ab4f8 !important;
+}
+
+// .modal-close-button {
+//   font-size: 1.4rem;
+//   font-weight: 700;
+//   line-height: 1;
+//   color: #000;
+//   opacity: 0.3;
+//   cursor: pointer;
+//   border: none;
+// }
