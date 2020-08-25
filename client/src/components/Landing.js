@@ -4,7 +4,7 @@ import CurrentTodo from "./CurrentTodo";
 import TodoList from "./TodoList";
 import TodoForm from "./TodoForm";
 import CompletedTodoList from "./CompletedTodoList";
-import Select from "./Select";
+// import Select from "./Select";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
 
@@ -38,7 +38,7 @@ const Landing = ({ todos, time, auth }) => {
         <div className="landing-inner">
           {/* make an api call that changes the timemode and create an action + reducer that goes along w it */}
           {/* pass that action into Landing, and into Select */}
-          <Select
+          {/* <Select
             value={timeMode()}
             label="Select Time Mode"
             placeholder="Pick one"
@@ -46,7 +46,7 @@ const Landing = ({ todos, time, auth }) => {
             onChange={() => {
               console.log("change");
             }}
-          />
+          /> */}
           <CurrentTodo />
           <h1>Timer</h1>
           <h1>Controls</h1>
@@ -66,7 +66,7 @@ const Landing = ({ todos, time, auth }) => {
               ]
             : null}
           <button onClick={toggle}>Show Modal</button>
-          <Modal isShowing={isShowing} hide={toggle} />
+          <Modal isShowing={isShowing} hide={toggle} timeMode={timeMode()} />
         </div>
       </div>
     </section>

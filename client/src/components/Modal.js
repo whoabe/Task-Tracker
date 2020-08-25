@@ -1,8 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Select from "./Select";
 
-export const Modal = ({ isShowing, hide }) =>
-  isShowing
+export const Modal = ({ isShowing, hide, timeMode }) => {
+  const callback = () => {
+    console.log("h");
+  };
+  const handleSave = () => {
+    console.log("save");
+  };
+  return isShowing
     ? ReactDOM.createPortal(
         <React.Fragment>
           <div className="modal-overlay" onClick={hide} />
@@ -35,11 +42,17 @@ export const Modal = ({ isShowing, hide }) =>
               </button>
             </div> */}
             <div className="modal-content">
-              <p>Hello, I'm a modal.</p>
+              <Select
+                value={timeMode}
+                label="Select Time Mode"
+                options={["Countdown", "Countdown + Timer", "Timer"]}
+              />
             </div>
             <div className="modal-footer">
               <button>Cancel</button>
-              <button className="save-btn">Save</button>
+              <button className="save-btn" onClick={() => handleSave()}>
+                Save
+              </button>
             </div>
           </div>
           {/* </div> */}
@@ -47,5 +60,6 @@ export const Modal = ({ isShowing, hide }) =>
         document.body
       )
     : null;
+};
 
 export default Modal;
