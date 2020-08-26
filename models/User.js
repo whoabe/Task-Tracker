@@ -3,39 +3,39 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: function () {
+    required: function() {
       return this.accountType != "guest";
-    },
+    }
   },
   email: {
     type: String,
-    required: function () {
+    required: function() {
       return this.accountType != "guest";
-    },
+    }
   },
   password: {
     type: String,
-    required: function () {
+    required: function() {
       return this.accountType != "guest";
-    },
+    }
   },
   avatar: {
-    type: String,
+    type: String
   },
   date: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   accountType: {
     type: String,
-    required: true,
+    required: true
   },
   settings: {
     timeMode: {
       type: String,
-      default: "Countdown + Timer",
-    },
-  },
+      default: "Countdown + Timer"
+    }
+  }
 });
 
 module.exports = User = mongoose.model("user", UserSchema);
