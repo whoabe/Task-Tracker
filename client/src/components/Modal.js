@@ -22,7 +22,7 @@ export const Modal = ({ isShowing, hide, timeMode }) => {
             role="dialog"
           > */}
           <div
-            onClick={(e) => e.preventDefault()}
+            onClick={e => e.preventDefault()}
             className="modal"
             aria-modal
             aria-hidden

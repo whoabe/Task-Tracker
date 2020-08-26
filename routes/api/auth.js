@@ -29,7 +29,7 @@ router.post(
   "/",
   [
     check("email", "Please include a valid email").isEmail(),
-    check("password", "Password required").exists(),
+    check("password", "Password required").exists()
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -59,8 +59,8 @@ router.post(
       // return jsonwebtoken
       const payload = {
         user: {
-          id: user.id,
-        },
+          id: user.id
+        }
       };
 
       //   sign the token
