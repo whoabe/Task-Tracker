@@ -17,7 +17,7 @@ router.post(
   [
     auth,
     [
-      check("name", "Todo name is required")
+      check("value", "Todo value is required")
         .not()
         .isEmpty()
     ]
@@ -33,7 +33,7 @@ router.post(
 
       const newTodo = new Todo({
         user: req.user.id,
-        name: req.body.name,
+        value: req.body.value,
         completed: false,
         totalTime: 0
       });
@@ -90,7 +90,7 @@ router.get("/:id", [auth, checkObjectId("id")], async (req, res) => {
 });
 
 // @route    PUT api/todos/:id/
-// @desc     Edit todo name
+// @desc     Edit todo value
 // @access   Private
 router.put("/:id", auth, async (req, res) => {
   try {
@@ -100,8 +100,8 @@ router.put("/:id", auth, async (req, res) => {
     if (todo.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
-    // update the name
-    todo.name = req.body.name;
+    // update the value
+    todo.value = req.body.value;
     await todo.save();
     return res.json(todo);
   } catch (err) {
@@ -121,7 +121,7 @@ router.put("/toggle/:id", auth, async (req, res) => {
     if (todo.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
-    // update the name
+    // update the value
     todo.completed = !todo.completed;
     await todo.save();
     return res.json(todo);

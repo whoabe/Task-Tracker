@@ -22,13 +22,15 @@ const Landing = ({ todos, time, auth }) => {
     }
   };
 
-  const timeMode = () => {
-    if (auth && auth.user) {
-      return auth.user.settings.timeMode;
-    } else {
-      return "Countdown + Timer";
-    }
-  };
+  // const settings = () => {
+  //   if (auth && auth.user) {
+  //     return auth.user.settings;
+  //   }
+  //   // else {
+  //   //   return "Countdown + Timer";
+  //   // }
+  //   // if there is no auth, then pull this info from the localStorage
+  // };
 
   const { isShowing, toggle } = useModal();
 
@@ -65,8 +67,8 @@ const Landing = ({ todos, time, auth }) => {
                 <CompletedTodoList key="2" />,
               ]
             : null}
-          <button onClick={toggle}>Show Modal</button>
-          <Modal isShowing={isShowing} hide={toggle} timeMode={timeMode()} />
+          <button onClick={toggle}>Settings</button>
+          <Modal isShowing={isShowing} hide={toggle} />
         </div>
       </div>
     </section>
@@ -76,7 +78,7 @@ const Landing = ({ todos, time, auth }) => {
 const mapStateToProps = (state) => ({
   todos: state.todo.todos,
   time: state.time,
-  auth: state.auth,
+  // auth: state.auth,
 });
 
 export default connect(mapStateToProps, {})(Landing);

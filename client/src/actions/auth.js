@@ -8,7 +8,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_TODOS
+  CLEAR_TODOS, EDIT_SETTINGS
 } from "./types";
 
 // Load User
@@ -83,4 +83,24 @@ export const logout = () => dispatch => {
   // dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
   dispatch({ type: CLEAR_TODOS });
+};
+
+
+// Edit settings
+export const editSettings = (userId, data) => async (dispatch) => {
+  try {
+    const res = await api.put(`/users/${userId}`, data);
+
+    dispatch({
+      type: EDIT_SETTINGS,
+      payload: {
+        userId,
+        data: res.data,
+      },
+    });
+  } catch (err) {
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
 };

@@ -6,7 +6,7 @@ import { editTodo } from "../actions/todo";
 
 const TodoText = ({ todo, editTodo }) => {
   const [isInputActive, setIsInputActive] = useState(false);
-  const [inputValue, setInputValue] = useState(todo.name);
+  const [inputValue, setInputValue] = useState(todo.value);
 
   const wrapperRef = useRef(null);
   const textRef = useRef(null);
@@ -19,7 +19,7 @@ const TodoText = ({ todo, editTodo }) => {
   useOnClickOutside(wrapperRef, () => {
     if (isInputActive) {
       //   onSetText(inputValue);
-      const data = { name: inputValue };
+      const data = { value: inputValue };
       editTodo(todo._id, data);
       setIsInputActive(false);
     }
@@ -38,13 +38,13 @@ const TodoText = ({ todo, editTodo }) => {
       // if Enter is pressed, save the text and case the editor
       if (enter) {
         // onSetText(inputValue);
-        const data = { name: inputValue };
+        const data = { value: inputValue };
         editTodo(todo._id, data);
         setIsInputActive(false);
       }
       // if Escape is pressed, revert the text and close the editor
       if (esc) {
-        setInputValue(todo.name);
+        setInputValue(todo.value);
         setIsInputActive(false);
       }
     }
@@ -63,7 +63,7 @@ const TodoText = ({ todo, editTodo }) => {
           textDecoration: todo.completed ? "line-through" : "",
         }}
       >
-        {todo.name}
+        {todo.value}
       </span>
       <input
         type="text"

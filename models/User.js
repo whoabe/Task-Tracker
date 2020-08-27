@@ -34,6 +34,14 @@ const UserSchema = new mongoose.Schema({
     timeMode: {
       type: String,
       default: "Countdown + Timer"
+    },
+    sessionTime: {
+      type: Number,
+      default: 25
+    },
+    breakTime: {
+      type: Number,
+      default: 5
     }
   }
 });

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 const CurrentTodo = ({ currentTodo }) => {
   return (
     <div className="large">
-      {currentTodo === null ? "add a task" : currentTodo.name}
+      {currentTodo === null ? "add a task" : currentTodo.value}
     </div>
   );
 };

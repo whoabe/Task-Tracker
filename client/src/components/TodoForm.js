@@ -4,13 +4,13 @@ import { addTodo } from "../actions/todo";
 import useInputState from "../hooks/useInputState";
 
 const TodoForm = ({ addTodo }) => {
-  const { name, reset, onChange } = useInputState();
+  const { value, reset, onChange } = useInputState("");
   return (
     <div className="todo-form">
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          addTodo({ name });
+          addTodo({ value });
           reset();
         }}
       >
@@ -18,7 +18,7 @@ const TodoForm = ({ addTodo }) => {
           type="text"
           className="input"
           onChange={onChange}
-          value={name}
+          value={value}
           placeholder="Add task"
         />
       </form>

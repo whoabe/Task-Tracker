@@ -5,7 +5,7 @@ const TodoSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
   },
-  name: {
+  value: {
     type: String,
     required: true,
   },
