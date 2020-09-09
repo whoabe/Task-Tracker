@@ -1,18 +1,32 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Select from "./Select";
-// import time from "../reducers/time";
-import useInputState from "../hooks/useInputState";
+import Input from "./Input";
 import { connect } from "react-redux";
+import { editSettings } from "../actions/auth";
 
-export const Modal = ({ isShowing, hide, auth }) => {
-  useEffect(() => {
-    checkSettings();
-  }, [auth]);
+export const Modal = ({ isShowing, hide, auth, editSettings }) => {
+  useEffect(
+    () => {
+      checkSettings();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [auth, hide]
+  );
+
   const [settings, setSettings] = useState({});
+  const [showSetTime, setShowSetTime] = useState(false);
   const checkSettings = () => {
     if (auth && auth.user) {
       setSettings(auth.user.settings);
+      if (
+        auth.user.settings.timeMode === "Countdown" ||
+        auth.user.settings.timeMode === "Countdown + Timer"
+      ) {
+        setShowSetTime(true);
+      } else if (settings.timeMode === "Timer") {
+        setShowSetTime(false);
+      }
     } else {
       setSettings({
         // pull from local storage
@@ -22,34 +36,28 @@ export const Modal = ({ isShowing, hide, auth }) => {
       });
     }
   };
-  // const settings = () => {
-  //   console.log(auth);
-  //   if (auth && auth.user) {
-  //     console.log(auth.user.settings);
-  //     debugger;
-  //     return auth.user.settings;
-  //   }
-  // };
-  const callback = () => {
-    console.log("condtionally render the session time and break time input");
+  const callback = (value) => {
+    if (value === "Countdown + Timer" || value === "Countdown") {
+      setShowSetTime(true);
+    } else {
+      setShowSetTime(false);
+    }
   };
-  // const handleSave = () => {
-  //   console.log("call the save settings action creator");
-  // };
   // ~~~~~~~~~~~~~~~~~~~~Need to reset the values if its not saved
-  const { value: sessionTime, onChange: onChangeSessionTime } = useInputState(
-    25
-  );
-  const { value: breakTime, onChange: onChangeBreakTime } = useInputState(5);
 
   const handleSubmit = (event) => {
-    // debugger;
-    console.log("submit");
     event.preventDefault();
-    // debugger;
-    console.log(event.target.timeMode.value);
-    console.log(event.target.sessionTime.value);
-    console.log(event.target.breakTime.value);
+    const data = {
+      timeMode: event.target.timeMode.value,
+    };
+    if (event.target.sessionTime) {
+      data.sessionTime = parseInt(event.target.sessionTime.value);
+    }
+    if (event.target.breakTime) {
+      data.breakTime = parseInt(event.target.breakTime.value);
+    }
+    editSettings(auth.user._id, data);
+
     hide();
   };
 
@@ -86,16 +94,6 @@ export const Modal = ({ isShowing, hide, auth }) => {
               </button>
             </div> */}
             <form onSubmit={handleSubmit} id="timeForm">
-              {/* <input
-                type="number"
-                className="input"
-                onChange={onChangeSessionTime}
-                value={sessionTime}
-                placeholder="Add task"
-              />
-              <button type="submit" className="save-btn" form="timeForm">
-                Save
-              </button> */}
               <div className="modal-content">
                 <Select
                   value={settings.timeMode}
@@ -104,26 +102,22 @@ export const Modal = ({ isShowing, hide, auth }) => {
                   parentCallback={callback}
                   name="timeMode"
                 />
-                {settings.timeMode === "Countdown + Timer" ? (
+                {showSetTime ? (
                   <div>
                     <div className="session-div">
-                      <label htmlFor="Session">Session</label>
-                      <input
-                        type="number"
-                        className="input"
-                        onChange={onChangeSessionTime}
-                        value={sessionTime}
+                      <Input
+                        value={settings.sessionTime}
+                        label="Session Time"
                         name="sessionTime"
+                        type="number"
                       />
                     </div>
                     <div className="break-div">
-                      <label htmlFor="Break">Break</label>
-                      <input
-                        type="number"
-                        className="input"
-                        onChange={onChangeBreakTime}
-                        value={breakTime}
+                      <Input
+                        value={settings.breakTime}
+                        label="Break Time"
                         name="breakTime"
+                        type="number"
                       />
                     </div>
                   </div>
@@ -155,4 +149,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {})(Modal);
+export default connect(mapStateToProps, { editSettings })(Modal);

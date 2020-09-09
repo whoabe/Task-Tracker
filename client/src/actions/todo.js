@@ -7,6 +7,12 @@ import {
   EDIT_TODO,
   TOGGLE_TODO,
   TODO_ERROR,
+  START_SESSION,
+  COMPLETE_SESSION,
+  SET_CURRENT_SESSION,
+  REMOVE_CURRENT_SESSION,
+  SET_CURRENT_TODO,
+  REMOVE_CURRENT_TODO,
 } from "./types";
 
 // Get Todos
@@ -36,7 +42,8 @@ export const getTodos = (userId) => async (dispatch) => {
 // Delete todo
 export const deleteTodo = (id) => async (dispatch) => {
   try {
-    const res = await api.delete(`/todos/${id}`);
+    // const res = await api.delete(`/todos/${id}`);
+    await api.delete(`/todos/${id}`);
 
     dispatch({
       type: DELETE_TODO,
@@ -150,3 +157,79 @@ export const toggleTodo = (todoId) => async (dispatch) => {
     });
   }
 };
+
+export const setCurrentTodo = (todo) => (dispatch) => {
+  dispatch({
+    type: SET_CURRENT_TODO,
+    payload: todo,
+  });
+};
+
+export const removeCurrentTodo = () => (dispatch) => {
+  dispatch({
+    type: REMOVE_CURRENT_TODO,
+  });
+};
+
+// Start Session
+export const startSession = (todoId, data) => async (dispatch) => {
+  try {
+    const res = await api.post(`/todos/session/${todoId}`, data);
+    dispatch({
+      type: START_SESSION,
+      payload: { todoId, data: res.data },
+    });
+    // sets the current session
+    dispatch({
+      type: SET_CURRENT_SESSION,
+      payload: res.data,
+    });
+    // dispatch(setAlert("Session Started", "success"));
+  } catch (err) {
+    dispatch({
+      type: TODO_ERROR,
+      // broken
+      // payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Complete Session
+export const completeSession = (todoId, sessionId, data) => async (
+  dispatch
+) => {
+  try {
+    const res = await api.put(`/todos/session/${todoId}/${sessionId}`, data);
+    dispatch({
+      type: COMPLETE_SESSION,
+      payload: { todoId, data: res.data },
+      // don't need sessionId in the reducer because we're updating the entire todo
+      // payload: { todoId, sessionId, data: res.data },
+    });
+    // dispatch(setAlert("Session Completed", "success"));
+    dispatch({
+      type: REMOVE_CURRENT_SESSION,
+    });
+  } catch (err) {
+    dispatch({
+      type: TODO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// // Set Task
+// export const setCurrentSession = (session) => (dispatch) => {
+//   dispatch({
+//     type: SET_CURRENT_SESSION,
+//     payload: session,
+//   });
+//   // dispatch(setAlert("Task Set", "success"));
+// };
+// // Remove Task
+// export const removeCurrentSession = () => (dispatch) => {
+//   dispatch({
+//     type: REMOVE_CURRENT_SESSION,
+//   });
+//   // dispatch(setAlert("Task Removed", "success"));
+// };

@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import {
-  deleteTodo,
-  // deleteSession,
-  toggleTodo,
-} from "../actions/todo";
-// import { removeTask } from "../../actions/task";
+import { deleteTodo, removeCurrentTodo, toggleTodo } from "../actions/todo";
 import TodoText from "./TodoText";
 // import SessionStartTime from "./SessionStartTime";
 // import SessionEndTime from "./SessionEndTime";
@@ -15,7 +10,7 @@ const Todo = ({
   deleteTodo,
   todo,
   //   handleSwitchTask,
-  //   removeTask,
+  removeCurrentTodo,
   //   deleteSession,
   task,
   toggleTodo,
@@ -79,7 +74,7 @@ const Todo = ({
             className="far fa-trash-alt"
             onClick={() => {
               deleteTodo(todo._id);
-              //   removeTask();
+              removeCurrentTodo();
             }}
           ></i>
         </span>
@@ -122,6 +117,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   deleteTodo,
   //   deleteSession,
-  //   removeTask,
+  removeCurrentTodo,
   toggleTodo,
 })(Todo);

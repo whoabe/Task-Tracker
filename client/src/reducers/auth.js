@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  EDIT_SETTINGS,
 } from "../actions/types";
 import setAuthToken from "../utils/setAuthToken";
 
@@ -46,6 +47,14 @@ export default function (state = initialState, action) {
         token: null,
         isAuthenticated: false,
         loading: false,
+      };
+    case EDIT_SETTINGS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          settings: payload,
+        },
       };
     default:
       return state;

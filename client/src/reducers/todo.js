@@ -5,8 +5,8 @@ import {
   ADD_TODO,
   DELETE_TODO,
   TOGGLE_TODO,
-  // START_SESSION,
-  // COMPLETE_SESSION,
+  START_SESSION,
+  COMPLETE_SESSION,
   // DELETE_SESSION,
   // EDIT_SESSION,
   TODO_ERROR,
@@ -17,11 +17,14 @@ import {
   // DELETE_BREAK,
   SET_CURRENT_TODO,
   REMOVE_CURRENT_TODO,
+  SET_CURRENT_SESSION,
+  REMOVE_CURRENT_SESSION,
 } from "../actions/types";
 
 const initialState = {
-  todos: [],
   currentTodo: null,
+  currentSession: null,
+  todos: [],
   loading: true,
   error: {},
 };
@@ -55,19 +58,19 @@ export default function (state = initialState, action) {
         todos: [payload, ...state.todos],
         loading: false,
       };
-    // case START_SESSION:
-    //   // find the correct todo and add a new session to todo.sessions
-    //   return {
-    //     ...state,
-    //     todos: state.todos.map((todo) => {
-    //       if (todo._id === payload.todoId) {
-    //         const sessions = [...todo.sessions, payload.data];
-    //         return { ...todo, sessions };
-    //       } else {
-    //         return todo;
-    //       }
-    //     }),
-    //   };
+    case START_SESSION:
+      // find the correct todo and add a new session to todo.sessions
+      return {
+        ...state,
+        todos: state.todos.map((todo) => {
+          if (todo._id === payload.todoId) {
+            const sessions = [...todo.sessions, payload.data];
+            return { ...todo, sessions };
+          } else {
+            return todo;
+          }
+        }),
+      };
     // case START_BREAK:
     //   return {
     //     ...state,
@@ -83,7 +86,7 @@ export default function (state = initialState, action) {
 
     case EDIT_TODO:
     case TOGGLE_TODO:
-      // case COMPLETE_SESSION:
+    case COMPLETE_SESSION:
       // case DELETE_SESSION:
       // case EDIT_SESSION:
       // case EDIT_BREAK:
@@ -117,10 +120,17 @@ export default function (state = initialState, action) {
     case SET_CURRENT_TODO:
       return {
         ...state,
-        currentTodo: payload.todo,
+        currentTodo: payload,
       };
     case REMOVE_CURRENT_TODO:
       return { ...state, currentTodo: null };
+    case SET_CURRENT_SESSION:
+      return {
+        ...state,
+        currentSession: payload,
+      };
+    case REMOVE_CURRENT_SESSION:
+      return { ...state, currentSession: null };
     default:
       return state;
   }

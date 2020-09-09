@@ -18,12 +18,17 @@ export const DELETE_TODO = "DELETE_TODO";
 export const EDIT_TODO = "EDIT_TODO";
 export const TOGGLE_TODO = "TOGGLE_TODO";
 export const TODO_ERROR = "TODO_ERROR";
-// Current Todo
+// Todos.CurrentTodo
 export const SET_CURRENT_TODO = "SET_CURRENT_TODO";
 export const REMOVE_CURRENT_TODO = "REMOVE_CURRENT_TODO";
-// Time Modes
-export const SET_TIME_MODE = "SET_TIME_MODE";
-export const SET_COUNTDOWN_TIME = "SET_COUNTDOWN_TIME";
-export const SET_COUNTDOWN_BREAKTIME = "SET_COUNTDOWN_BREAKTIME";
-// 
-export const EDIT_SETTINGS = "EDIT_SETTINGS"
+// Todos.Sessions
+export const START_SESSION = "START_SESSION";
+export const COMPLETE_SESSION = "COMPLETE_SESSION";
+export const SET_CURRENT_SESSION = "SET_CURRENT_SESSION";
+export const REMOVE_CURRENT_SESSION = "REMOVE_CURRENT_SESSION";
+// Settings
+export const EDIT_SETTINGS = "EDIT_SETTINGS";
+// Timer Modes (currentMode and active)
+export const SET_MODE = "SET_MODE";
+export const SET_MODE_TIME = "SET_MODE_TIME";
+export const TOGGLE_MODE_ACTIVE = "TOGGLE_MODE_ACTIVE";

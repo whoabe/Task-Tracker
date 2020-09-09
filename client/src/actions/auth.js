@@ -8,27 +8,34 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  CLEAR_TODOS, EDIT_SETTINGS
+  CLEAR_TODOS,
+  EDIT_SETTINGS,
+  SET_MODE_TIME,
 } from "./types";
 
 // Load User
-export const loadUser = () => async dispatch => {
+export const loadUser = () => async (dispatch) => {
   try {
     const res = await api.get("/auth");
+    // console.log(res.data);
 
     dispatch({
       type: USER_LOADED,
-      payload: res.data
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_MODE_TIME,
+      payload: res.data.settings,
     });
   } catch (err) {
     dispatch({
-      type: AUTH_ERROR
+      type: AUTH_ERROR,
     });
   }
 };
 
 // Register User
-export const register = ({ name, email, password }) => async dispatch => {
+export const register = ({ name, email, password }) => async (dispatch) => {
   const body = JSON.stringify({ name, email, password });
 
   try {
@@ -36,24 +43,24 @@ export const register = ({ name, email, password }) => async dispatch => {
 
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
 
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
     });
   }
 };
 
 // Login User
-export const login = (email, password) => async dispatch => {
+export const login = (email, password) => async (dispatch) => {
   const body = JSON.stringify({ email, password });
 
   try {
@@ -61,7 +68,7 @@ export const login = (email, password) => async dispatch => {
 
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data
+      payload: res.data,
     });
 
     dispatch(loadUser());
@@ -69,34 +76,33 @@ export const login = (email, password) => async dispatch => {
     const errors = err.response.data.errors;
 
     if (errors) {
-      errors.forEach(error => dispatch(setAlert(error.msg, "danger")));
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
 
     dispatch({
-      type: LOGIN_FAIL
+      type: LOGIN_FAIL,
     });
   }
 };
 
 // Logout / Clear Profile
-export const logout = () => dispatch => {
+export const logout = () => (dispatch) => {
   // dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });
   dispatch({ type: CLEAR_TODOS });
 };
 
-
 // Edit settings
 export const editSettings = (userId, data) => async (dispatch) => {
   try {
     const res = await api.put(`/users/${userId}`, data);
-
     dispatch({
       type: EDIT_SETTINGS,
-      payload: {
-        userId,
-        data: res.data,
-      },
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_MODE_TIME,
+      payload: res.data,
     });
   } catch (err) {
     dispatch({

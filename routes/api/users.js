@@ -15,14 +15,12 @@ const auth = require("../../middleware/auth");
 router.post(
   "/",
   [
-    check("name", "Name is required")
-      .not()
-      .isEmpty(),
+    check("name", "Name is required").not().isEmpty(),
     check("email", "Please include a valid email").isEmail(),
     check(
       "password",
       "Please enter a password with 6 or more characters"
-    ).isLength({ min: 6 })
+    ).isLength({ min: 6 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -44,7 +42,7 @@ router.post(
       const avatar = gravatar.url(email, {
         s: "200",
         rating: "pg",
-        d: "mm"
+        d: "mm",
       });
 
       //   create a new user
@@ -53,7 +51,7 @@ router.post(
         email,
         avatar,
         password,
-        accountType: "user"
+        accountType: "user",
       });
 
       // encrypt password using bcrypt
@@ -68,8 +66,8 @@ router.post(
       // return jsonwebtoken
       const payload = {
         user: {
-          id: user.id
-        }
+          id: user.id,
+        },
       };
 
       //   sign the token
@@ -106,8 +104,8 @@ router.post("/guest", async (req, res) => {
   // return jsonwebtoken
   const payload = {
     user: {
-      id: user.id
-    }
+      id: user.id,
+    },
   };
 
   //   sign the token
@@ -124,23 +122,22 @@ router.post("/guest", async (req, res) => {
 // @access   Private
 router.put("/:id", auth, async (req, res) => {
   try {
-    // pull out todo
-    // const todo = await Todo.findById(req.params.id);
-    // pull out user
     const user = await User.findById(req.params.id);
     // Check user
     if (user._id.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
-    // // update the name
-    // todo.name = req.body.name;
-    // await todo.save();
-    // return res.json(todo);
 
     // update the settings
     user.settings.timeMode = req.body.timeMode;
+    if (req.body.sessionTime) {
+      user.settings.sessionTime = req.body.sessionTime;
+    }
+    if (req.body.breakTime) {
+      user.settings.breakTime = req.body.breakTime;
+    }
     await user.save();
-    return res.json(user);
+    return res.json(user.settings);
   } catch (err) {
     console.error(err.message);
     return res.status(500).send("Server Error");

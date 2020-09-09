@@ -4,7 +4,7 @@ const Select = ({ label, options, value, parentCallback, name }) => {
   const [selectValue, setSelectValue] = useState(value);
   const onChange = (e) => {
     setSelectValue(e.target.value);
-    parentCallback();
+    parentCallback(e.target.value);
   };
   return (
     <div className="form-group">

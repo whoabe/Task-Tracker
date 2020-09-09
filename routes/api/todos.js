@@ -14,14 +14,7 @@ const checkObjectId = require("../../middleware/checkObjectId");
 // @access   Private
 router.post(
   "/",
-  [
-    auth,
-    [
-      check("value", "Todo value is required")
-        .not()
-        .isEmpty()
-    ]
-  ],
+  [auth, [check("value", "Todo value is required").not().isEmpty()]],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -35,7 +28,7 @@ router.post(
         user: req.user.id,
         value: req.body.value,
         completed: false,
-        totalTime: 0
+        totalTime: 0,
       });
 
       const todo = await newTodo.save();
@@ -171,7 +164,7 @@ router.post(
   "/session/:id",
   [
     auth,
-    checkObjectId("id")
+    checkObjectId("id"),
     // [check("text", "Text is required").not().isEmpty()],
   ],
   async (req, res) => {
@@ -189,7 +182,7 @@ router.post(
         todo: req.params.id,
         // description: req.body.description,
         startTime: req.body.startTime,
-        time: 0
+        time: 0,
       };
 
       todo.sessions.unshift(newSession);
@@ -198,6 +191,12 @@ router.post(
       //
       const currentSession = todo.sessions[0];
       res.json(currentSession);
+      /*
+      start a socket connection
+      */
+      /*
+      if there's a socket disconnection, then edit the currentSession
+      */
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
@@ -213,7 +212,7 @@ router.put("/session/:id/:session_id", auth, async (req, res) => {
     const todo = await Todo.findById(req.params.id);
     // Pull out session
     const session = todo.sessions.find(
-      session => session.id === req.params.session_id
+      (session) => session.id === req.params.session_id
     );
     // Check user
     if (todo.user.toString() !== req.user.id) {
@@ -254,7 +253,7 @@ router.put("/session/edit/:id/:session_id", auth, async (req, res) => {
     const todo = await Todo.findById(req.params.id);
     // Pull out session
     const session = todo.sessions.find(
-      session => session.id === req.params.session_id
+      (session) => session.id === req.params.session_id
     );
     // Check user
     if (todo.user.toString() !== req.user.id) {
@@ -317,7 +316,7 @@ router.delete("/session/:id/:session_id", auth, async (req, res) => {
 
     // Pull out session
     const session = todo.sessions.find(
-      session => session.id === req.params.session_id
+      (session) => session.id === req.params.session_id
     );
     // Make sure session exists
     if (!session) {
@@ -355,7 +354,7 @@ router.post(
   "/breaks/:id",
   [
     auth,
-    checkObjectId("id")
+    checkObjectId("id"),
     // [check("text", "Text is required").not().isEmpty()],
   ],
   async (req, res) => {
@@ -373,7 +372,7 @@ router.post(
         todo: req.params.id,
         // description: req.body.description,
         startTime: req.body.startTime,
-        time: 0
+        time: 0,
       };
 
       todo.breaks.unshift(newBreak);
@@ -396,7 +395,7 @@ router.put("/breaks/:id/:break_id", auth, async (req, res) => {
     const todo = await Todo.findById(req.params.id);
     // Pull out session
     const breakk = todo.breaks.find(
-      breakk => breakk.id === req.params.break_id
+      (breakk) => breakk.id === req.params.break_id
     );
     // Check user
     if (todo.user.toString() !== req.user.id) {
@@ -430,7 +429,7 @@ router.put("/breaks/edit/:id/:break_id", auth, async (req, res) => {
     const todo = await Todo.findById(req.params.id);
     // Pull out break
     const breakk = todo.breaks.find(
-      breakk => breakk.id === req.params.break_id
+      (breakk) => breakk.id === req.params.break_id
     );
     // Check user
     if (todo.user.toString() !== req.user.id) {
@@ -493,7 +492,7 @@ router.delete("/breaks/:id/:break_id", auth, async (req, res) => {
 
     // Pull out break
     const breakk = todo.breaks.find(
-      breakk => breakk.id === req.params.break_id
+      (breakk) => breakk.id === req.params.break_id
     );
     // Make sure break exists
     if (!breakk) {

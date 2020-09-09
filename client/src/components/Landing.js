@@ -7,12 +7,81 @@ import CompletedTodoList from "./CompletedTodoList";
 // import Select from "./Select";
 import Modal from "./Modal";
 import useModal from "../hooks/useModal";
+import Timer from "./Timer";
+import useInterval from "../hooks/useInterval";
+import Controls from "./Controls";
+import { setMode } from "../actions/mode";
 
-const Landing = ({ todos, time, auth }) => {
+const Landing = ({ todos, mode, auth }) => {
   useEffect(() => {
     checkIfCompletedTask(todos);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todos]);
+  useEffect(() => {
+    // setCountdownTime(getCountdownTime());
+    // setCountdownBreakTime(getCountdownBreakTime());
+    setCountdownTime(mode.sessionTime * 60000);
+    // convert the sessionTime from minutes to milliseconds
+    setCountdownBreakTime(mode.breakTime * 60000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth, mode]);
   const [showCompletedTodoList, setShowCompletedTodoList] = useState(false);
+  const [timerTime, setTimerTime] = useState(0);
+  // timerTime is both the time for the timer and for the timer break
+
+  // const getCountdownTime = () => {
+  //   if (user && user.settings) {
+  //     if (
+  //       user.settings.timeMode === "Countdown" ||
+  //       user.settings.timeMode === "Countdown + Timer"
+  //     ) {
+  //       return user.settings.sessionTime;
+  //     }
+  //   }
+  //   return 0;
+  // };
+  // const getCountdownBreakTime = () => {
+  //   if (user && user.settings) {
+  //     if (
+  //       user.settings.timeMode === "Countdown" ||
+  //       user.settings.timeMode === "Countdown + Timer"
+  //     ) {
+  //       return user.settings.breakTime;
+  //     }
+  //   }
+  //   return 0;
+  // };
+  const [countdownTime, setCountdownTime] = useState(0);
+  const [countdownBreakTime, setCountdownBreakTime] = useState(0);
+  // need countdownTime and countdownBreakTime because they need to decrement using useInterval, but we dont want the redux state to change
+
+  // if using a timer function, increment the time
+  useInterval(
+    () => {
+      setTimerTime(timerTime + 1000);
+    },
+    mode.active && mode.timeMode === "Timer" ? 1000 : null
+  );
+  // counting down/decrement
+  useInterval(
+    () => {
+      setCountdownTime(countdownTime - 1000);
+    },
+    mode.active &&
+      mode.currentMode === "session" &&
+      mode.timeMode === "Countdown"
+      ? 1000
+      : null
+  );
+  useInterval(
+    () => {
+      setCountdownBreakTime(countdownBreakTime - 1000);
+      console.log(countdownBreakTime);
+    },
+    mode.active && mode.currentMode === "break" && mode.timeMode === "Countdown"
+      ? 1000
+      : null
+  );
 
   const checkIfCompletedTask = (todos) => {
     if (todos && todos.find((todo) => todo.completed === true)) {
@@ -38,20 +107,23 @@ const Landing = ({ todos, time, auth }) => {
     <section className="landing">
       <div className="dark-overlay">
         <div className="landing-inner">
-          {/* make an api call that changes the timemode and create an action + reducer that goes along w it */}
-          {/* pass that action into Landing, and into Select */}
-          {/* <Select
-            value={timeMode()}
-            label="Select Time Mode"
-            placeholder="Pick one"
-            options={["Countdown", "Countdown + Timer", "Timer"]}
-            onChange={() => {
-              console.log("change");
-            }}
-          /> */}
+          <h3>Mode: {mode.timeMode}</h3>
+          <h3>CDtime (ms): {countdownTime}</h3>
+          <h3>CDBreakTime (ms): {countdownBreakTime}</h3>
           <CurrentTodo />
-          <h1>Timer</h1>
-          <h1>Controls</h1>
+          <Timer
+            timerTime={timerTime}
+            countdownTime={countdownTime}
+            countdownBreakTime={countdownBreakTime}
+          />
+          <Controls
+            timerTime={timerTime}
+            setTimerTime={setTimerTime}
+            countdownTime={countdownTime}
+            setCountdownTime={setCountdownTime}
+            countdownBreakTime={countdownBreakTime}
+            setCountdownBreakTime={setCountdownBreakTime}
+          />
           <TodoList />
           <TodoForm />
           {showCompletedTodoList
@@ -77,8 +149,8 @@ const Landing = ({ todos, time, auth }) => {
 
 const mapStateToProps = (state) => ({
   todos: state.todo.todos,
-  time: state.time,
-  // auth: state.auth,
+  mode: state.mode,
+  auth: state.auth,
 });
 
-export default connect(mapStateToProps, {})(Landing);
+export default connect(mapStateToProps, { setMode })(Landing);

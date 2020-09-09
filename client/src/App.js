@@ -17,8 +17,23 @@ import "./style/App.css";
 
 const App = () => {
   useEffect(() => {
-    setAuthToken(localStorage.token);
-    store.dispatch(loadUser());
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+      store.dispatch(loadUser());
+    } else if (localStorage.user) {
+      console.log("hi guest");
+    } else {
+      const user = {
+        name: "guest",
+        accountType: "guest",
+        settings: {
+          timeMode: "Countdown + Timer",
+          sessionTime: 25,
+          breakTime: 5,
+        },
+      };
+      localStorage.setItem("user", JSON.stringify(user));
+    }
   }, []);
   // adding the [] after useEffect has it only run once
   return (
