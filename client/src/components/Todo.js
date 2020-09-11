@@ -45,7 +45,7 @@ const Todo = ({
         <TodoText todo={todo} />
       </td>
       <td>
-        <FormatTime elapsedTime={todo.totalTime} />
+        <FormatTime time={todo.totalTime} />
       </td>
       <td>
         <div>

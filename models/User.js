@@ -43,10 +43,6 @@ const UserSchema = new mongoose.Schema({
       type: Number,
       default: 5,
     },
-    longBreakTime: {
-      type: Number,
-      default: 10,
-    },
     auto: {
       type: Boolean,
       default: false,

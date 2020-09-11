@@ -130,12 +130,14 @@ router.put("/:id", auth, async (req, res) => {
 
     // update the settings
     user.settings.timeMode = req.body.timeMode;
+    user.settings.auto = req.body.auto;
     if (req.body.sessionTime) {
       user.settings.sessionTime = req.body.sessionTime;
     }
     if (req.body.breakTime) {
       user.settings.breakTime = req.body.breakTime;
     }
+
     await user.save();
     return res.json(user.settings);
   } catch (err) {

@@ -20,16 +20,21 @@ const Timer = ({
         return <FormatTime time={countdownBreakTime} />;
       }
     } else if (mode.timeMode === "Countdown + Timer") {
-      if (mode.currentMode === "session" && countdownTime > 0) {
+      if (mode.currentMode === "session") {
         return <FormatTime time={countdownTime} />;
-      } else if (
-        (mode.currentMode === "session" && countdownTime === 0) ||
-        (mode.currentMode === "break" && countdownBreakTime === 0)
-      ) {
-        return <FormatTime time={timerTime} />;
-      } else if (mode.currentMode === "break" && countdownBreakTime > 0) {
+      } else if (mode.currentMode === "break") {
         return <FormatTime time={countdownBreakTime} />;
       }
+      // if (mode.currentMode === "session" && countdownTime > 0) {
+      //   return <FormatTime time={countdownTime} />;
+      // } else if (
+      //   (mode.currentMode === "session" && countdownTime <= 0) ||
+      //   (mode.currentMode === "break" && countdownBreakTime <= 0)
+      // ) {
+      //   return <FormatTime time={timerTime} />;
+      // } else if (mode.currentMode === "break" && countdownBreakTime > 0) {
+      //   return <FormatTime time={countdownBreakTime} />;
+      // }
     }
   };
   return (

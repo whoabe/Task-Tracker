@@ -111,9 +111,7 @@ const Controls = ({
   return (
     <div className="controls">
       {/* if the mode = timer and timer is not active, then show start button */}
-      {mode.currentMode === "session" &&
-      mode.active === false &&
-      timerTime === 0 ? (
+      {mode.currentMode === "session" && mode.active === false ? (
         <button onClick={() => handleStart()}>
           {/* check if there is a task, if there is then toggle the activestatus */}
           <i className="fas fa-play btn"></i>
@@ -130,7 +128,7 @@ const Controls = ({
             ) : (
               <div>
                 {/* Timer */}
-                <i className="fas fa-play btn">Timer</i>
+                <i className="fas fa-play btn">Session</i>
               </div>
             )}
           </button>

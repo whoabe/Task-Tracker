@@ -31,4 +31,5 @@ export const EDIT_SETTINGS = "EDIT_SETTINGS";
 // Timer Modes (currentMode and active)
 export const SET_MODE = "SET_MODE";
 export const SET_MODE_TIME = "SET_MODE_TIME";
+// export const SET_MODE_AUTO = "SET_MODE_AUTO";
 export const TOGGLE_MODE_ACTIVE = "TOGGLE_MODE_ACTIVE";

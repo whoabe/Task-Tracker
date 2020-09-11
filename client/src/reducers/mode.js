@@ -23,6 +23,7 @@ export default function (state = initialState, action) {
         timeMode: payload.timeMode,
         sessionTime: payload.sessionTime,
         breakTime: payload.breakTime,
+        auto: payload.auto,
       };
     default:
       return state;

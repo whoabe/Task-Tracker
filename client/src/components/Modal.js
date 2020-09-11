@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Select from "./Select";
 import Input from "./Input";
+import Checkbox from "./Checkbox";
 import { connect } from "react-redux";
 import { editSettings } from "../actions/auth";
 
@@ -16,6 +17,7 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
 
   const [settings, setSettings] = useState({});
   const [showSetTime, setShowSetTime] = useState(false);
+  const [showAuto, setShowAuto] = useState(false);
   const checkSettings = () => {
     if (auth && auth.user) {
       setSettings(auth.user.settings);
@@ -26,6 +28,15 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
         setShowSetTime(true);
       } else if (settings.timeMode === "Timer") {
         setShowSetTime(false);
+      }
+      if (auth.user.settings.timeMode === "Countdown") {
+        setShowAuto(true);
+      }
+      if (
+        auth.user.settings.timeMode === "Countdown + Timer" ||
+        auth.user.settings.timeMode === "Timer"
+      ) {
+        setShowAuto(false);
       }
     } else {
       setSettings({
@@ -42,6 +53,12 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
     } else {
       setShowSetTime(false);
     }
+    if (value === "Countdown + Timer" || "Timer") {
+      setShowAuto(false);
+    }
+    if (value === "Countdown") {
+      setShowAuto(true);
+    }
   };
   // ~~~~~~~~~~~~~~~~~~~~Need to reset the values if its not saved
 
@@ -49,6 +66,7 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
     event.preventDefault();
     const data = {
       timeMode: event.target.timeMode.value,
+      auto: event.target.auto.checked,
     };
     if (event.target.sessionTime) {
       data.sessionTime = parseInt(event.target.sessionTime.value);
@@ -120,6 +138,16 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
                         type="number"
                       />
                     </div>
+                  </div>
+                ) : null}
+                {showAuto ? (
+                  <div>
+                    <Checkbox
+                      checked={settings.auto}
+                      label="Auto"
+                      name="auto"
+                      type="checkbox"
+                    />
                   </div>
                 ) : null}
               </div>

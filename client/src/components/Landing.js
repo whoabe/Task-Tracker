@@ -10,7 +10,7 @@ import useModal from "../hooks/useModal";
 import Timer from "./Timer";
 import useInterval from "../hooks/useInterval";
 import Controls from "./Controls";
-import { setMode } from "../actions/mode";
+// import { setMode } from "../actions/mode";
 
 const Landing = ({ todos, mode, auth }) => {
   useEffect(() => {
@@ -20,9 +20,9 @@ const Landing = ({ todos, mode, auth }) => {
   useEffect(() => {
     // setCountdownTime(getCountdownTime());
     // setCountdownBreakTime(getCountdownBreakTime());
-    setCountdownTime(mode.sessionTime * 60000);
+    setCountdownTime(mode.sessionTime * 1000);
     // convert the sessionTime from minutes to milliseconds
-    setCountdownBreakTime(mode.breakTime * 60000);
+    setCountdownBreakTime(mode.breakTime * 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth, mode]);
   const [showCompletedTodoList, setShowCompletedTodoList] = useState(false);
@@ -60,16 +60,37 @@ const Landing = ({ todos, mode, auth }) => {
     () => {
       setTimerTime(timerTime + 1000);
     },
-    mode.active && mode.timeMode === "Timer" ? 1000 : null
+    (mode.active && mode.timeMode === "Timer") ||
+      (mode.active &&
+        mode.timeMode === "Countdown + Timer" &&
+        countdownTime <= 0) ||
+      (mode.active &&
+        mode.timeMode === "Countdown + Timer" &&
+        countdownBreakTime <= 0)
+      ? 1000
+      : null
   );
   // counting down/decrement
   useInterval(
     () => {
-      setCountdownTime(countdownTime - 1000);
+      if (
+        (mode.timeMode === "Countdown" &&
+          mode.auto === true &&
+          countdownTime >= 0) ||
+        (mode.timeMode === "Countdown" &&
+          mode.auto === false &&
+          countdownTime > 0) ||
+        mode.timeMode === "Countdown + Timer"
+      ) {
+        setCountdownTime(countdownTime - 1000);
+      }
     },
-    mode.active &&
+    (mode.active &&
       mode.currentMode === "session" &&
-      mode.timeMode === "Countdown"
+      mode.timeMode === "Countdown") ||
+      (mode.active &&
+        mode.currentMode === "session" &&
+        mode.timeMode === "Countdown + Timer")
       ? 1000
       : null
   );
@@ -78,7 +99,12 @@ const Landing = ({ todos, mode, auth }) => {
       setCountdownBreakTime(countdownBreakTime - 1000);
       console.log(countdownBreakTime);
     },
-    mode.active && mode.currentMode === "break" && mode.timeMode === "Countdown"
+    (mode.active &&
+      mode.currentMode === "break" &&
+      mode.timeMode === "Countdown") ||
+      (mode.active &&
+        mode.currentMode === "break" &&
+        mode.timeMode === "Countdown + Timer")
       ? 1000
       : null
   );
@@ -110,6 +136,8 @@ const Landing = ({ todos, mode, auth }) => {
           <h3>Mode: {mode.timeMode}</h3>
           <h3>CDtime (ms): {countdownTime}</h3>
           <h3>CDBreakTime (ms): {countdownBreakTime}</h3>
+          <h3>Auto: {mode.auto ? "True" : "False"}</h3>
+
           <CurrentTodo />
           <Timer
             timerTime={timerTime}
@@ -153,4 +181,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { setMode })(Landing);
+export default connect(mapStateToProps, {})(Landing);
