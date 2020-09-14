@@ -18,9 +18,11 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
   const [settings, setSettings] = useState({});
   const [showSetTime, setShowSetTime] = useState(false);
   const [showAuto, setShowAuto] = useState(false);
+  const [checked, setChecked] = useState(false);
   const checkSettings = () => {
     if (auth && auth.user) {
       setSettings(auth.user.settings);
+      setChecked(auth.user.settings.auto);
       if (
         auth.user.settings.timeMode === "Countdown" ||
         auth.user.settings.timeMode === "Countdown + Timer"
@@ -66,8 +68,12 @@ export const Modal = ({ isShowing, hide, auth, editSettings }) => {
     event.preventDefault();
     const data = {
       timeMode: event.target.timeMode.value,
-      auto: event.target.auto.checked,
     };
+    if (event.target.auto) {
+      data.auto = event.target.auto.checked;
+    } else {
+      data.auto = checked;
+    }
     if (event.target.sessionTime) {
       data.sessionTime = parseInt(event.target.sessionTime.value);
     }

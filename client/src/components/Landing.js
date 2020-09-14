@@ -96,8 +96,10 @@ const Landing = ({ todos, mode, auth }) => {
   );
   useInterval(
     () => {
-      setCountdownBreakTime(countdownBreakTime - 1000);
-      console.log(countdownBreakTime);
+      if (mode.timeMode === "Countdown" && countdownBreakTime > 0) {
+        setCountdownBreakTime(countdownBreakTime - 1000);
+        console.log(countdownBreakTime);
+      }
     },
     (mode.active &&
       mode.currentMode === "break" &&
