@@ -14,6 +14,7 @@ const Todo = ({
   //   deleteSession,
   task,
   toggleTodo,
+  currentTodo,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -74,7 +75,9 @@ const Todo = ({
             className="far fa-trash-alt"
             onClick={() => {
               deleteTodo(todo._id);
-              removeCurrentTodo();
+              if (todo._id === currentTodo._id) {
+                removeCurrentTodo();
+              }
             }}
           ></i>
         </span>
@@ -112,6 +115,7 @@ const Todo = ({
 
 const mapStateToProps = (state) => ({
   task: state.task,
+  currentTodo: state.todo.currentTodo,
 });
 
 export default connect(mapStateToProps, {
