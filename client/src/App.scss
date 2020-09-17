@@ -346,3 +346,14 @@ button {
 //   cursor: pointer;
 //   border: none;
 // }
+.todo-selector-active {
+  color: #000000;
+  &:hover {
+    cursor: pointer;
+    color: darkgrey;
+  }
+}
+.todo-selector-inactive:hover {
+  cursor: pointer;
+  color: darkgrey;
+}

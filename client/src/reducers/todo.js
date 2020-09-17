@@ -11,20 +11,24 @@ import {
   // EDIT_SESSION,
   TODO_ERROR,
   EDIT_TODO,
-  // START_BREAK,
-  // COMPLETE_BREAK,
+  START_BREAK,
+  COMPLETE_BREAK,
   // EDIT_BREAK,
   // DELETE_BREAK,
   SET_CURRENT_TODO,
   REMOVE_CURRENT_TODO,
   SET_CURRENT_SESSION,
   REMOVE_CURRENT_SESSION,
+  SET_CURRENT_BREAK,
+  REMOVE_CURRENT_BREAK,
 } from "../actions/types";
 
 const initialState = {
   currentTodo: null,
+  currentBreak: null,
   currentSession: null,
   todos: [],
+  breaks: [],
   loading: true,
   error: {},
 };
@@ -71,27 +75,27 @@ export default function (state = initialState, action) {
           }
         }),
       };
-    // case START_BREAK:
-    //   return {
-    //     ...state,
-    //     todos: state.todos.map((todo) => {
-    //       if (todo._id === payload.todoId) {
-    //         const breaks = [...todo.breaks, payload.data];
-    //         return { ...todo, breaks };
-    //       } else {
-    //         return todo;
-    //       }
-    //     }),
-    //   };
+    case START_BREAK:
+      return {
+        ...state,
+        todos: state.todos.map((todo) => {
+          if (todo._id === payload.todoId) {
+            const breaks = [...todo.breaks, payload.data];
+            return { ...todo, breaks };
+          } else {
+            return todo;
+          }
+        }),
+      };
 
     case EDIT_TODO:
     case TOGGLE_TODO:
     case COMPLETE_SESSION:
+    case COMPLETE_BREAK:
       // case DELETE_SESSION:
       // case EDIT_SESSION:
       // case EDIT_BREAK:
       // case DELETE_BREAK:
-      // case COMPLETE_BREAK:
       return {
         ...state,
         todos: state.todos.map((todo) => {
@@ -124,6 +128,13 @@ export default function (state = initialState, action) {
       };
     case REMOVE_CURRENT_TODO:
       return { ...state, currentTodo: null };
+    case SET_CURRENT_BREAK:
+      return {
+        ...state,
+        currentBreak: payload,
+      };
+    case REMOVE_CURRENT_BREAK:
+      return { ...state, currentBreak: null };
     case SET_CURRENT_SESSION:
       return {
         ...state,

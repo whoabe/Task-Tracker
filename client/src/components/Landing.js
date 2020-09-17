@@ -154,7 +154,7 @@ const Landing = ({ todos, mode, auth }) => {
             countdownBreakTime={countdownBreakTime}
             setCountdownBreakTime={setCountdownBreakTime}
           />
-          <TodoList />
+          <TodoList setTimerTime={setTimerTime} />
           <TodoForm />
           {showCompletedTodoList
             ? [

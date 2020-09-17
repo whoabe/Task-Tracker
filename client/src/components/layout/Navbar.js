@@ -18,6 +18,13 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <span className="hide-sm">Logout</span>
         </a>
       </li>
+      <li>
+        <i className="fas fa-cog" onClick={() => console.log("click")}></i>
+        {/* <i
+          className="fas fa-ellipsis-v"
+          onClick={() => console.log("click")}
+        ></i> */}
+      </li>
     </ul>
   );
   const guestLinks = (
@@ -27,6 +34,13 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
       <li>
         <Link to="/login">Login</Link>
+      </li>
+      <li>
+        <i className="fas fa-cog" onClick={() => console.log("click")}></i>
+        {/* <i
+          className="fas fa-ellipsis-v"
+          onClick={() => console.log("click")}
+        ></i> */}
       </li>
     </ul>
   );

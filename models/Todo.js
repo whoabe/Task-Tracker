@@ -49,9 +49,11 @@ const TodoSchema = new Schema({
   ],
 
   totalTime: {
+    default: 0,
     type: Number,
   },
   totalBreakTime: {
+    default: 0,
     type: Number,
   },
 });

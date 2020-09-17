@@ -1,4 +1,9 @@
-import { SET_MODE, SET_MODE_TIME, TOGGLE_MODE_ACTIVE } from "../actions/types";
+import {
+  SET_MODE,
+  SET_MODE_TIME,
+  TOGGLE_MODE_ACTIVE,
+  SET_MODE_ACTIVE,
+} from "../actions/types";
 
 const initialState = {
   currentMode: "session",
@@ -25,6 +30,8 @@ export default function (state = initialState, action) {
         breakTime: payload.breakTime,
         auto: payload.auto,
       };
+    case SET_MODE_ACTIVE:
+      return { ...state, active: payload };
     default:
       return state;
   }

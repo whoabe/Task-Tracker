@@ -4,7 +4,7 @@ import { setCurrentTodo } from "../actions/todo";
 
 const CurrentTodo = ({ currentTodo, todos, setCurrentTodo }) => {
   useEffect(() => {
-    if (todos && todos.length > 0) {
+    if (todos && todos.length > 0 && !currentTodo) {
       const firstTodo = todos.find((todo) => todo.completed === false);
       setCurrentTodo(firstTodo);
     }

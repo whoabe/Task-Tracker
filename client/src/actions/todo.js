@@ -13,6 +13,10 @@ import {
   REMOVE_CURRENT_SESSION,
   SET_CURRENT_TODO,
   REMOVE_CURRENT_TODO,
+  START_BREAK,
+  COMPLETE_BREAK,
+  SET_CURRENT_BREAK,
+  REMOVE_CURRENT_BREAK,
 } from "./types";
 
 // Get Todos
@@ -200,6 +204,7 @@ export const completeSession = (todoId, sessionId, data) => async (
 ) => {
   try {
     const res = await api.put(`/todos/session/${todoId}/${sessionId}`, data);
+    console.log("todoId: " + todoId + " sessionId: " + sessionId);
     dispatch({
       type: COMPLETE_SESSION,
       payload: { todoId, data: res.data },
@@ -218,18 +223,116 @@ export const completeSession = (todoId, sessionId, data) => async (
   }
 };
 
-// // Set Task
-// export const setCurrentSession = (session) => (dispatch) => {
-//   dispatch({
-//     type: SET_CURRENT_SESSION,
-//     payload: session,
-//   });
-//   // dispatch(setAlert("Task Set", "success"));
+// //Edit Session
+// export const editSession = (todoId, sessionId, data) => async (dispatch) => {
+//   try {
+//     const res = await api.put(
+//       `/todos/session/edit/${todoId}/${sessionId}`,
+//       data
+//     );
+//     dispatch({
+//       type: EDIT_SESSION,
+//       payload: { todoId, data: res.data },
+//     });
+//   } catch (err) {
+//     dispatch({
+//       type: TODO_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
 // };
-// // Remove Task
-// export const removeCurrentSession = () => (dispatch) => {
-//   dispatch({
-//     type: REMOVE_CURRENT_SESSION,
-//   });
-//   // dispatch(setAlert("Task Removed", "success"));
+
+// // Delete Session
+// export const deleteSession = (todoId, sessionId) => async (dispatch) => {
+//   try {
+//     const res = await api.delete(`/todos/session/${todoId}/${sessionId}`);
+//     dispatch({
+//       type: DELETE_SESSION,
+//       payload: { todoId, data: res.data },
+//     });
+//     dispatch(setAlert("Session Removed", "success"));
+//   } catch (err) {
+//     dispatch({
+//       type: TODO_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
+// };
+
+// Start Break
+export const startBreak = (todoId, data) => async (dispatch) => {
+  try {
+    const res = await api.post(`/todos/breaks/${todoId}`, data);
+    // adds a session to the todo
+    dispatch({
+      type: START_BREAK,
+      payload: { todoId, data: res.data },
+    });
+    // sets the current break
+    dispatch({
+      type: SET_CURRENT_BREAK,
+      payload: res.data,
+    });
+    // dispatch(setAlert("Session Started", "success"));
+  } catch (err) {
+    dispatch({
+      type: TODO_ERROR,
+      // broken
+      // payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+// Complete Break
+export const completeBreak = (todoId, breakId, data) => async (dispatch) => {
+  try {
+    console.log("breakId: " + breakId);
+    const res = await api.put(`/todos/breaks/${todoId}/${breakId}`, data);
+    dispatch({
+      type: COMPLETE_BREAK,
+      payload: { todoId, data: res.data },
+      // don't need sessionId in the reducer because we're updating the entire todo
+      // payload: { todoId, breakId, data: res.data },
+    });
+    dispatch({
+      type: REMOVE_CURRENT_BREAK,
+    });
+  } catch (err) {
+    dispatch({
+      type: TODO_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// //Edit Break
+// export const editBreak = (todoId, breakId, data) => async (dispatch) => {
+//   try {
+//     const res = await api.put(`/todos/breaks/edit/${todoId}/${breakId}`, data);
+//     dispatch({
+//       type: EDIT_BREAK,
+//       payload: { todoId, data: res.data },
+//     });
+//   } catch (err) {
+//     dispatch({
+//       type: TODO_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
+// };
+
+// // Delete Break
+// export const deleteBreak = (todoId, breakId) => async (dispatch) => {
+//   try {
+//     const res = await api.delete(`/todos/breaks/${todoId}/${breakId}`);
+//     dispatch({
+//       type: DELETE_BREAK,
+//       payload: { todoId, data: res.data },
+//     });
+//     // dispatch(setAlert("Session Removed", "success"));
+//   } catch (err) {
+//     dispatch({
+//       type: TODO_ERROR,
+//       payload: { msg: err.response.statusText, status: err.response.status },
+//     });
+//   }
 // };

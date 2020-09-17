@@ -26,6 +26,11 @@ export const START_SESSION = "START_SESSION";
 export const COMPLETE_SESSION = "COMPLETE_SESSION";
 export const SET_CURRENT_SESSION = "SET_CURRENT_SESSION";
 export const REMOVE_CURRENT_SESSION = "REMOVE_CURRENT_SESSION";
+// Todos.Breaks
+export const START_BREAK = "START_BREAK";
+export const COMPLETE_BREAK = "COMPLETE_BREAK";
+export const SET_CURRENT_BREAK = "SET_CURRENT_BREAK";
+export const REMOVE_CURRENT_BREAK = "REMOVE_CURRENT_BREAK";
 // Settings
 export const EDIT_SETTINGS = "EDIT_SETTINGS";
 // Timer Modes (currentMode and active)
@@ -33,3 +38,4 @@ export const SET_MODE = "SET_MODE";
 export const SET_MODE_TIME = "SET_MODE_TIME";
 // export const SET_MODE_AUTO = "SET_MODE_AUTO";
 export const TOGGLE_MODE_ACTIVE = "TOGGLE_MODE_ACTIVE";
+export const SET_MODE_ACTIVE = "SET_MODE_ACTIVE";

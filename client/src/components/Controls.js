@@ -1,8 +1,15 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { setMode, toggleModeActive } from "../actions/mode";
+import { setMode, toggleModeActive, setModeActive } from "../actions/mode";
 // import { setAlert } from "../actions/alert";
-import { startSession, completeSession } from "../actions/todo";
+import {
+  startSession,
+  completeSession,
+  startBreak,
+  completeBreak,
+} from "../actions/todo";
+import completeBreakData from "../utils/completeBreakData";
+import completeSessionData from "../utils/completeSessionData";
 
 const Controls = ({
   timerTime,
@@ -11,26 +18,24 @@ const Controls = ({
   countdownBreakTime,
   mode,
   startSession,
+  completeSession,
+  startBreak,
+  completeBreak,
   currentSession,
   currentTodo,
   currentBreak,
   setMode,
   toggleModeActive,
+  setModeActive,
 }) => {
   useEffect(() => {
-    if (
-      (mode.timeMode === "Countdown" &&
-        mode.auto === true &&
-        countdownTime <= 0) ||
-      (mode.timeMode === "Countdown" &&
-        mode.auto === true &&
-        countdownBreakTime <= 0 &&
-        mode.currentMode === "break")
-    ) {
-      handleSwitchModeAuto();
-    }
+    handleSwitchModeAuto();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timerTime, countdownTime, countdownBreakTime]);
+  useEffect(() => {
+    controlsReset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTodo && currentTodo._id]);
   const checkCurrentTask = () => {
     if (currentTodo === null) {
       // setAlert("No task selected", "danger");
@@ -40,16 +45,24 @@ const Controls = ({
     }
   };
 
-  const completeSessionData = () => {
-    const endTime = JSON.stringify(Date.now());
-    const data = { endTime };
-    return data;
+  // if the currentTodo changes, then run this function
+  const controlsReset = () => {
+    // setActive(False)
+    setModeActive(false);
+    setMode("session");
+    setTimerTime(0);
   };
 
-  const completeBreakData = () => {
-    const breakEndData = { endTime: JSON.stringify(Date.now()) };
-    return breakEndData;
-  };
+  // const completeSessionData = () => {
+  //   const endTime = JSON.stringify(Date.now());
+  //   const data = { endTime };
+  //   return data;
+  // };
+
+  // const completeBreakData = () => {
+  //   const breakEndData = { endTime: JSON.stringify(Date.now()) };
+  //   return breakEndData;
+  // };
 
   const handleStart = () => {
     if ((checkCurrentTask() === true) & (currentTodo != null)) {
@@ -57,10 +70,6 @@ const Controls = ({
       const startTime = JSON.stringify(Date.now());
       const data = { startTime: startTime };
       startSession(currentTodo._id, data);
-      console.log("startSession action with data.startTime: " + data.startTime);
-
-      // need to call setSession with the startSession response
-      // setSession()
     }
   };
 
@@ -73,141 +82,55 @@ const Controls = ({
         currentSession._id,
         completeSessionData()
       );
-      console.log("completeSessiondata: " + completeSessionData());
-    }
-    if (currentBreak) {
-      console.log("completeBreakData: " + completeBreakData());
-      //   completeBreak(currentTodo._id, currentBreak._id, completeBreakData());
+    } else if (currentBreak) {
+      completeBreak(currentTodo._id, currentBreak._id, completeBreakData());
     }
     setMode("session");
     setTimerTime(0);
   };
 
-  const handleSwitchMode = () => {
-    // setIsTimerActive(false);
+  const handleSwitchMode = async () => {
     toggleModeActive();
-    completeSession(timerTime, currentTodo, mode);
-    if (currentSession != null) {
-      completeSession(
+    if (currentSession) {
+      await completeSession(
         currentTodo._id,
         currentSession._id,
         completeSessionData()
       );
-      console.log("completeSessiondata: " + completeSessionData());
-      // console.log("complete session action");
-    } else {
-      const startTime = JSON.stringify(Date.now());
-      const data = { startTime: startTime };
-      startSession(currentTodo._id, data);
-      console.log("start session action w data.startTime: " + data.startTime);
-    }
-    if (mode.currentMode === "session") {
-      // timer to break
       setMode("break");
       setTimerTime(0);
-      // setIsTimerActive(true);
       toggleModeActive();
       const breakData = { startTime: JSON.stringify(Date.now()) };
-      // startBreak(task._id, breakData);
-      console.log(
-        "start break action w breakData.startTime: " + breakData.startTime
+      startBreak(currentTodo._id, breakData);
+    } else if (currentBreak) {
+      await completeBreak(
+        currentTodo._id,
+        currentBreak._id,
+        completeBreakData()
       );
-    } else if (mode.currentMode === "break") {
-      // need the current breakId in here
-      // completeBreak(task._id, currentBreak._id, completeBreakData());
-      console.log("completeBreakData: " + completeBreakData());
-      // console.log("complete break action");
       setMode("session");
       setTimerTime(0);
-      // setIsTimerActive(true);
       toggleModeActive();
+      // const startTime = JSON.stringify(Date.now());
+      const data = { startTime: JSON.stringify(Date.now()) };
+      startSession(currentTodo._id, data);
     }
   };
   const handleSwitchModeAuto = () => {
-    toggleModeActive();
-    completeSession(timerTime, currentTodo, mode);
-    if (currentSession != null) {
-      completeSession(
-        currentTodo._id,
-        currentSession._id,
-        completeSessionData()
-      );
-      console.log("completeSessiondata: " + completeSessionData());
-      // console.log("complete session action");
-    } else {
-      const startTime = JSON.stringify(Date.now());
-      const data = { startTime: startTime };
-      startSession(currentTodo._id, data);
-      console.log("start session action w data.startTime: " + data.startTime);
-    }
-    if (mode.currentMode === "session") {
-      // timer to break
-      setMode("break");
-      setTimerTime(0);
-      // setIsTimerActive(true);
-      toggleModeActive();
-      const breakData = { startTime: JSON.stringify(Date.now()) };
-      // startBreak(task._id, breakData);
-      console.log(
-        "start break action w breakData.startTime: " + breakData.startTime
-      );
-    } else if (mode.currentMode === "break") {
-      // need the current breakId in here
-      // completeBreak(task._id, currentBreak._id, completeBreakData());
-      console.log("completeBreakData: " + completeBreakData());
-      // console.log("complete break action");
-      setMode("session");
-      setTimerTime(0);
-      // setIsTimerActive(true);
-      toggleModeActive();
+    if (
+      (mode.active &&
+        mode.timeMode === "Countdown" &&
+        mode.auto === true &&
+        countdownTime <= 0) ||
+      (mode.active &&
+        mode.timeMode === "Countdown" &&
+        mode.auto === true &&
+        countdownBreakTime <= 0 &&
+        mode.currentMode === "break")
+    ) {
+      handleSwitchMode();
     }
   };
-
-  // const showControls = () => {
-  //   if (mode.currentMode === "session" && mode.active === false) {
-  //     return (
-  //       <button onClick={() => handleStart()}>
-  //         {/* check if there is a task, if there is then toggle the activestatus */}
-  //         <i className="fas fa-play btn"></i>
-  //       </button>
-  //     );
-  //   } else if (
-  //     (mode.timeMode === "Countdown" &&
-  //       mode.auto === true &&
-  //       countdownTime <= 0) ||
-  //     (mode.timeMode === "Countdown" &&
-  //       mode.auto === true &&
-  //       countdownBreakTime <= 0 &&
-  //       mode.currentMode === "break")
-  //   ) {
-  //     handleSwitchModeAuto();
-  //     // instead of calling handleswitchmode, call a function that completes the session
-  //     // set the mode to the other one
-  //   } else {
-  //     return (
-  //       <div>
-  //         <button onClick={() => handleSwitchMode()}>
-  //           {mode.currentMode === "session" ? (
-  //             <div>
-  //               {/* break */}
-  //               <i className="fas fa-mug-hot btn">Break</i>
-  //             </div>
-  //           ) : (
-  //             <div>
-  //               {/* Timer */}
-  //               <i className="fas fa-play btn">Session</i>
-  //             </div>
-  //           )}
-  //         </button>
-  //         <button onClick={() => handleStop()}>
-  //           {/* need to have the timer reset */}
-  //           {/* stop */}
-  //           <i className="far fa-pause-circle btn">Stop</i>
-  //         </button>
-  //       </div>
-  //     );
-  //   }
-  // };
 
   return (
     <div className="controls">
@@ -257,5 +180,8 @@ export default connect(mapStateToProps, {
   toggleModeActive,
   startSession,
   completeSession,
+  startBreak,
+  completeBreak,
+  setModeActive,
 })(Controls);
 // export default Controls;

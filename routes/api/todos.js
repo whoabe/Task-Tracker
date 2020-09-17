@@ -392,12 +392,26 @@ router.post(
 // @access   Private
 router.put("/breaks/:id/:break_id", auth, async (req, res) => {
   try {
+    //
+    //
+    // Todo.findByIdAndUpdate(req.params.id, {'sessions._id': req.params.break_id}, )
+
+    // console.log("TodoId: " + req.params.id);
+    // console.log("breakId: " + req.params.break_id);
+
     const todo = await Todo.findById(req.params.id);
+
+    // console.log("todo: " + todo);
+    // console.log("todo value: " + todo.value);
     // Pull out session
+
     const breakk = todo.breaks.find(
       (breakk) => breakk.id === req.params.break_id
     );
+
+    // console.log("break: " + breakk);
     // Check user
+
     if (todo.user.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
@@ -413,6 +427,7 @@ router.put("/breaks/:id/:break_id", auth, async (req, res) => {
       return breakTime + breakk.time;
     }, 0);
     await todo.save();
+
     return res.json(todo);
   } catch (err) {
     console.error(err.message);

@@ -1,10 +1,20 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { deleteTodo, removeCurrentTodo, toggleTodo } from "../actions/todo";
+import {
+  deleteTodo,
+  removeCurrentTodo,
+  toggleTodo,
+  completeSession,
+  completeBreak,
+  setCurrentTodo,
+} from "../actions/todo";
 import TodoText from "./TodoText";
 // import SessionStartTime from "./SessionStartTime";
 // import SessionEndTime from "./SessionEndTime";
 import FormatTime from "./FormatTime";
+import completeBreakData from "../utils/completeBreakData";
+import completeSessionData from "../utils/completeSessionData";
+import { setModeActive, setMode } from "../actions/mode";
 
 const Todo = ({
   deleteTodo,
@@ -12,24 +22,51 @@ const Todo = ({
   //   handleSwitchTask,
   removeCurrentTodo,
   //   deleteSession,
-  task,
+  // task,
   toggleTodo,
   currentTodo,
+  currentSession,
+  currentBreak,
+  completeSession,
+  completeBreak,
+  setCurrentTodo,
+  setTimerTime,
+  setModeActive,
+  setMode,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  // if (currentTodo && currentTodo._id) {
+  //   console.log("currentTodo id: " + currentTodo._id);
+  // }
+  const handleSwitchCurrentTodo = (todo) => {
+    if (currentSession) {
+      completeSession(
+        currentTodo._id,
+        currentSession._id,
+        completeSessionData()
+      );
+    } else if (currentBreak) {
+      completeBreak(currentTodo._id, currentBreak._id, completeBreakData());
+    }
+    // controlsReset function
+    setModeActive(false);
+    setMode("sessions");
+    setTimerTime(0);
+    setCurrentTodo(todo);
+  };
 
   return [
     <tr key={todo._id}>
       <td>
-        {task && task._id === todo._id ? (
+        {currentTodo && currentTodo._id === todo._id ? (
           <i
             className="fas fa-caret-right fa-lg mx todo-selector-active"
-            // onClick={() => handleSwitchTask(todo._id)}
+            onClick={() => handleSwitchCurrentTodo(todo)}
           ></i>
         ) : (
           <i
             className="fas fa-caret-right fa-lg mx todo-selector-inactive"
-            // onClick={() => handleSwitchTask(todo._id)}
+            onClick={() => handleSwitchCurrentTodo(todo)}
           ></i>
         )}
       </td>
@@ -89,10 +126,10 @@ const Todo = ({
           <td></td>
           <td></td>
           <td>{index + 1}</td>
-          {/* <td>
-            <FormatTime elapsedTime={session.time} />
-          </td>
           <td>
+            <FormatTime time={session.time} />
+          </td>
+          {/* <td>
             <SessionStartTime session={session} todoId={todo._id} />
           </td>
           <td>
@@ -114,8 +151,9 @@ const Todo = ({
 };
 
 const mapStateToProps = (state) => ({
-  task: state.task,
   currentTodo: state.todo.currentTodo,
+  currentSession: state.todo.currentSession,
+  currentBreak: state.todo.currentBreak,
 });
 
 export default connect(mapStateToProps, {
@@ -123,4 +161,9 @@ export default connect(mapStateToProps, {
   //   deleteSession,
   removeCurrentTodo,
   toggleTodo,
+  completeSession,
+  completeBreak,
+  setCurrentTodo,
+  setModeActive,
+  setMode,
 })(Todo);

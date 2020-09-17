@@ -369,3 +369,17 @@ button {
 .save-btn {
   color: #8ab4f8 !important;
 }
+
+.todo-selector-active {
+  color: #000000;
+}
+
+.todo-selector-active:hover {
+  cursor: pointer;
+  color: darkgrey;
+}
+
+.todo-selector-inactive:hover {
+  cursor: pointer;
+  color: darkgrey;
+}

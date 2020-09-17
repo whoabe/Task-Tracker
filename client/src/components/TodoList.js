@@ -4,7 +4,7 @@ import { getTodos } from "../actions/todo";
 // import {removeTask} from '../actions/task'
 import Todo from "./Todo";
 
-const TodoList = ({ getTodos, todo: { todos }, auth }) => {
+const TodoList = ({ getTodos, todo: { todos }, auth, setTimerTime }) => {
   useEffect(() => {
     if (auth && auth.user) {
       getTodos(auth.user._id);
@@ -33,6 +33,7 @@ const TodoList = ({ getTodos, todo: { todos }, auth }) => {
                   <Todo
                     todo={todo}
                     key={todo._id}
+                    setTimerTime={setTimerTime}
                     // handleSwitchTask={handleSwitchTask}
                   />
                 );
